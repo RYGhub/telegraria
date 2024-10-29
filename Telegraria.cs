@@ -33,6 +33,7 @@ namespace Telegraria
 
         public override void Initialize()
         {
+            
             ServerApi.Hooks.ServerJoin.Register(this, OnTerrariaJoin);
             ServerApi.Hooks.ServerLeave.Register(this, OnTerrariaLeave);
             PlayerHooks.PlayerChat += OnTerrariaChat;
@@ -56,7 +57,8 @@ namespace Telegraria
         {
             TShock.Utils.Broadcast($"<{ev.Player.Name}> {ev.RawText}", new Microsoft.Xna.Framework.Color(27, 226, 108));
 
-            _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{ev.Player.Name}&gt;</b> {ev.RawText}");
+            var task = _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{ev.Player.Name}&gt;</b> {ev.RawText}");
+            task?.RunSynchronously();
 
             ev.Handled = true;
         }
@@ -66,7 +68,8 @@ namespace Telegraria
             var player = TShock.Players[args.Who];
             if (player == null) return;
             
-            _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{player.Name}&gt;</b> joined the game.");
+            var task = _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{player.Name}&gt;</b> joined the game.");
+            task?.RunSynchronously();
         }
 
         private void OnTerrariaLeave(LeaveEventArgs args)
@@ -74,7 +77,8 @@ namespace Telegraria
             var player = TShock.Players[args.Who];
             if (player == null) return;
 
-            _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{player.Name}&gt;</b> left the game.");
+            var task = _bot.SendTextMessageAsync(new ChatId(_cfg.ChatId), $"<b>&lt;{player.Name}&gt;</b> left the game.");
+            task?.RunSynchronously();
         }
 
         private async Task OnTelegramChat(Message message, UpdateType type)
